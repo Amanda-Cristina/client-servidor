@@ -22,45 +22,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function Header() {
-
-	const [currentUser, setCurrentUser] = useState(false);
-
-	console.log('header');
-	console.log(currentUser);
-	const location = useLocation();
-
-	useEffect(() => {
-		const data = JSON.parse(localStorage.getItem("access_token"));
-		console.log(data)
-		if (data) {
-			setCurrentUser(true);
-		}
-		
-	  }, []);
-
-	
-
-
-	
-
-	useEffect(() => {
-		// Update the header based on the current location
-		switch (location.pathname) {
-		  case '/':
-			document.title = 'Home - My App';
-			break;
-		  case '/login':
-			document.title = 'Login - My App';
-			break;
-		  case '/register':
-			document.title = 'Register - My App';
-			break;
-		  default:
-			document.title = 'My App';
-			break;
-		}
-	  }, [location.pathname]);
+function Header(props) {
+	const { isLoading } = props;
 
 	const classes = useStyles();
 	return (
@@ -88,8 +51,18 @@ function Header() {
 							SAOITR
 						</Link>
 					</Typography>
-					{currentUser ? (
+					{isLoading ? (
 					<nav>
+						<Button
+						href="#"
+						color="primary"
+						variant="outlined"
+						className={classes.link}
+						component={NavLink}
+						to="/perfil"
+					>
+						Perfil
+						</Button>
 						<Button
 						href="#"
 						color="primary"
@@ -100,7 +73,7 @@ function Header() {
 					>
 						Logout
 						</Button>
-
+				
 					
 					</nav>) : (
 					<nav>

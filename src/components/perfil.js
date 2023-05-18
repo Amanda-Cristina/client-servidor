@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../axios';
 import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function Perfil() {
+export default function Perfil(props) {
 	const history = useHistory();
 
 	
@@ -48,9 +48,51 @@ export default function Perfil() {
 	});
 
 	
+	const getStoredData = () => {
+		const storedData = {
+		  name: localStorage.getItem('name'),
+		  email: localStorage.getItem('email'),
+		  password: ''
+		};
+		if (storedData.name && storedData.email) {
+		  return storedData;
+		}
+		return initialFormData;
+	  };
 
-	const [formData, updateFormData] = useState(initialFormData);
-	const [formErrors, setFormErrors] = useState(initialFormData);
+	  useEffect(() => {
+		const id = localStorage.getItem('id');
+		axiosInstance
+				.get(`/users/${id}`)
+				.then((res) => {
+					updateFormData(
+						{name:res.data.name,
+						email:res.data.email,
+						password: ''
+						})
+				}).catch((error) => {
+					if (error.response) {
+						// The request was made and the server responded with a status code
+						// that falls out of the range of 2xx
+						console.log(error.response.data);
+						console.log(error.response.status);
+						console.log(error.response.headers);
+						setError(error.response.data.message); // set the error message state
+					} else if (error.request) {
+						// The request was made but no response was received
+						// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+						// http.ClientRequest in node.js
+						console.log(error.request);
+					} else {
+						// Something happened in setting up the request that triggered an Error
+						console.log('Error', error.message);
+					}
+					console.log(error.config);
+				});
+	  }, []);
+
+	const [formData, updateFormData] = useState(initialFormData)
+	const [formErrors, setFormErrors] = useState(initialFormData)
 	const [error, setError] = useState(false);
 	
 
@@ -59,20 +101,21 @@ export default function Perfil() {
 		const errors = {};
 	  
 		if (!email) {
-		  errors.email = 'Email is required';
-		} else if (!/\S+@\S+\.\S+/.test(email)) {
-		  errors.email = 'Email is invalid';
-		}
-
-		if (!name) {
-			errors.name = 'Name is required';
-		  } else if (name.length < 2) {
-			errors.name = 'Name must be at least 2 characters';
+			errors.email = 'Email is required';
+		  } else if (!/\S+@\S+\.\S+/.test(email)) {
+			errors.email = 'Email is invalid';
 		  }
-	  
-		if (!password) {
-		  errors.password = 'Password is required';
-		} 
+  
+		  if (!name) {
+			  errors.name = 'Name is required';
+			} else if (name.length < 2) {
+			  errors.name = 'Name must be at least 2 characters';
+			}
+		
+		  if (!password) {
+			errors.password = 'Password is required';
+		  } 
+
 	  
 		setFormErrors(errors);
 	  
@@ -97,14 +140,15 @@ export default function Perfil() {
 		console.log(formData);
 		if (validateForm()){
 			const hashedPassword = md5(formData.password);
+			const id = localStorage.getItem('id');
 			axiosInstance
-				.post(`/users`, {
+				.put(`/users/${id}`, {
 					email: formData.email,
 					name: formData.name,
 					password: hashedPassword,
 				})
 				.then((res) => {
-					history.push('/login');
+					history.push('/perfil');
 					console.log(res);
 					console.log(res.data);
 				}).catch((error) => {
@@ -153,6 +197,7 @@ export default function Perfil() {
 								onChange={handleChange}
 								error={!!formErrors.email}
 								helperText={formErrors.email}
+								value={formData.email}
 							  
 							/>
 						</Grid>
@@ -167,6 +212,7 @@ export default function Perfil() {
 								onChange={handleChange}
 								error={!!formErrors.name}
 								helperText={formErrors.name}
+								value={formData.name}
 							/>
 						</Grid>
 						<Grid item xs={12}>

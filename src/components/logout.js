@@ -7,23 +7,28 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 
-export default function Logout() {
+export default function Logout(props) {
 	const history = useHistory();
 	const [error, setError] = useState(false);
+	const { setIsLoading } = props;
 
 	const handleErrorClose = () => {
 		setError(false);
-		history.push('/login');
+		history.push('/');
 	  };
 
 	useEffect(() => {
-		axiosInstance.get('/logout').then((res) => {
+		const id = localStorage.getItem('id');
+		axiosInstance.post(`/logout`, {
+			id: Number(id)
+		}).then((res) => {
 			console.log(res);
-			localStorage.removeItem('access_token');
+			localStorage.removeItem('token');
 			localStorage.removeItem('name');
 			localStorage.removeItem('email');
 			axiosInstance.defaults.headers['Authorization'] = null;
-			history.push('/login');		
+			setIsLoading(false);
+			history.push('/');		
 		}).catch((error) => {
 			if (error.response) {
 				// The request was made and the server responded with a status code
@@ -43,7 +48,7 @@ export default function Logout() {
 			}
 			console.log(error.config);
 		});
-	});
+	}, []);
 	return (
 		<Dialog open={error} onClose={handleErrorClose}>
 		<DialogTitle>Error</DialogTitle>

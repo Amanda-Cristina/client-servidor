@@ -39,8 +39,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function SignIn() {
+export default function Login(props) {
 	const history = useHistory();
+	const { setIsLoading } = props;
 	const initialFormData = Object.freeze({
 		email: '',
 		password: '',
@@ -93,11 +94,13 @@ export default function SignIn() {
 					password: hashedPassword,
 				})
 				.then((res) => {
-					localStorage.setItem('access_token', res.data.access_token);
+					localStorage.setItem('token', res.data.token);
 					localStorage.setItem('name', res.data.name);
 					localStorage.setItem('email', res.data.email);
+					localStorage.setItem('id', res.data.id);
 					axiosInstance.defaults.headers['Authorization'] =
-						'Bearer ' + localStorage.getItem('access_token');
+						'Bearer ' + localStorage.getItem('token');
+					setIsLoading(true);
 					history.push('/');
 					//console.log(res);
 					console.log(res.data);
@@ -162,10 +165,7 @@ export default function SignIn() {
 						error={!!formErrors.password}
 						helperText={formErrors.password}
 					/>
-					<FormControlLabel
-						control={<Checkbox value="remember" color="primary" />}
-						label="Remember me"
-					/>
+					
 					<Button
 						type="submit"
 						fullWidth
@@ -177,11 +177,6 @@ export default function SignIn() {
 						Sign In
 					</Button>
 					<Grid container>
-						<Grid item xs>
-							<Link href="#" variant="body2">
-								Forgot password?
-							</Link>
-						</Grid>
 						<Grid item>
 							<Link href="#" variant="body2">
 								{"Don't have an account? Sign Up"}
