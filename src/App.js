@@ -14,7 +14,7 @@ function App() {
 
 	useEffect(() => {
 		setAppState({ loading: true });
-		const apiUrl = `http://localhost:3000/ocurrences`;
+		const apiUrl = `http://localhost:20000/ocurrences`;
 		fetch(apiUrl)
 			.then((data) => data.json())
 			.then((posts) => {

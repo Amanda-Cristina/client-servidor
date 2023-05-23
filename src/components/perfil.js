@@ -112,9 +112,7 @@ export default function Perfil(props) {
 			  errors.name = 'Name must be at least 2 characters';
 			}
 		
-		  if (!password) {
-			errors.password = 'Password is required';
-		  } 
+		 
 
 	  
 		setFormErrors(errors);
@@ -139,13 +137,12 @@ export default function Perfil(props) {
 		e.preventDefault();
 		console.log(formData);
 		if (validateForm()){
-			const hashedPassword = md5(formData.password);
 			const id = localStorage.getItem('id');
 			axiosInstance
 				.put(`/users/${id}`, {
 					email: formData.email,
 					name: formData.name,
-					password: hashedPassword,
+					password: formData.password.length === 0 ? null : md5(formData.password)
 				})
 				.then((res) => {
 					history.push('/perfil');
