@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { baseURL } from './globals';
 
-const baseURL = 'http://10.20.8.119:25000/';
 
 const axiosInstance = axios.create({
 	baseURL: baseURL,

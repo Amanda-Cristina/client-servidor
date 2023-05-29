@@ -12,15 +12,7 @@ function App() {
 		posts: null,
 	});
 
-	useEffect(() => {
-		setAppState({ loading: true });
-		const apiUrl = `http://localhost:20000/ocurrences`;
-		fetch(apiUrl)
-			.then((data) => data.json())
-			.then((posts) => {
-				setAppState({ loading: false, posts: posts });
-			});
-	}, [setAppState]);
+
 	return (
 		<div className="App">
 			<h1>Ocorrências</h1>

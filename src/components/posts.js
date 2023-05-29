@@ -38,7 +38,7 @@ const Posts = (props) => {
   const [filter, setFilter] = useState("");
 
   if (!posts || posts.length === 0) {
-    return <p>Can not find any posts, sorry</p>;
+    return <p>Can not find any occurrences, sorry</p>;
   }
 
   const columns = [
