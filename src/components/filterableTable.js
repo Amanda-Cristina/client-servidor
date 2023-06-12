@@ -77,7 +77,7 @@ const FilterableTable = (props) => {
               <TableCell align="right">Local</TableCell>
               <TableCell align="right">Km</TableCell>
               <TableCell align="right">Occurrence type</TableCell>
-              <TableCell align="right">User ID</TableCell>
+             
             </TableRow>
           </TableHead>
           <TableBody>

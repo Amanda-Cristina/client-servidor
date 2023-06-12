@@ -10,6 +10,7 @@ import Register from './components/register';
 import Login from './components/login';
 import Logout from './components/logout';
 import Perfil from './components/perfil';
+import Occurrences from './components/occurrences';
 import ProtectedRoute from './components/protectedRoute';
 
 function Index() {
@@ -33,6 +34,7 @@ function Index() {
 		  <Route element={<ProtectedRoute setIsLoading={setIsLoading} />}>
 			<Route path="/logout" render={(props) => <Logout {...props} setIsLoading={setIsLoading} />} />
 			<Route path="/perfil" render={(props) => <Perfil {...props} setIsLoading={setIsLoading} />} />
+      <Route path="/occurrences" render={(props) => <Occurrences {...props} setIsLoading={setIsLoading} />} />
 		  </Route>
         </Switch>
         <Footer />

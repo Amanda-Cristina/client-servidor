@@ -53,6 +53,16 @@ function Header(props) {
 					</Typography>
 					{isLoading ? (
 					<nav>
+					<Button
+						href="#"
+						color="primary"
+						variant="outlined"
+						className={classes.link}
+						component={NavLink}
+						to="/occurrences"
+					>
+						My Occurrences
+						</Button>
 						<Button
 						href="#"
 						color="primary"

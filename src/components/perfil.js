@@ -112,8 +112,6 @@ export default function Perfil(props) {
 			  errors.name = 'Name must be at least 2 characters';
 			}
 		
-		 
-
 	  
 		setFormErrors(errors);
 	  
@@ -145,6 +143,7 @@ export default function Perfil(props) {
 					password: formData.password.length === 0 ? null : md5(formData.password)
 				})
 				.then((res) => {
+					setError('Atualizado com sucesso');
 					history.push('/perfil');
 					console.log(res);
 					console.log(res.data);
@@ -239,7 +238,6 @@ export default function Perfil(props) {
 						Update
 					</Button>
 					<Dialog open={error} onClose={handleErrorClose}>
-						<DialogTitle>Error</DialogTitle>
 						<DialogContent>
 						<p>{error}</p>
 						</DialogContent>

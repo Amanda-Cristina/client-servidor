@@ -1,13 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
-import Posts from './components/posts';
-import PostLoadingComponent from './components/postLoading';
-import { baseURL } from './globals';
+import UserPosts from './userPosts';
+import PostLoadingComponent from './postLoading';
+import { baseURL } from '../globals';
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles((theme) => ({
+	paper: {
+		marginTop: theme.spacing(8),
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+	},
+	avatar: {
+		margin: theme.spacing(1),
+		backgroundColor: theme.palette.secondary.main,
+	},
+	form: {
+		width: '100%', // Fix IE 11 issue.
+		marginTop: theme.spacing(3),
+	},
+	submit: {
+		margin: theme.spacing(3, 0, 2),
+	},
+}));
 
-
-function App() {
-	const PostLoading = PostLoadingComponent(Posts);
+export default function Perfil(props) {
+    const PostLoading = PostLoadingComponent(UserPosts);
 	const [appState, setAppState] = useState({
 		loading: false,
 		posts: null,
@@ -40,12 +58,16 @@ function App() {
 				console.log(error.config);
 			});
 	}, [setAppState]);
+    const classes = useStyles();
 
 	return (
-		<div className="App">
-			<h1>Ocorrências</h1>
+		<div className={classes.paper}>
+			<h1>Occurrence History</h1>
 			<PostLoading isLoading={appState.loading} posts={appState.posts} />
+           
 		</div>
+
+   
 	);
+
 }
-export default App;
