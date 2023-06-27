@@ -16,10 +16,10 @@ const Posts = (props) => {
   
  
  const columns = [
-    { field: "registered_at", title: "Registered At"},
-    { field: "local", title: "Local" },
-    { field: "km", title: "KM"},
-    { field: "occurrence_type", title: "Ocurrence Type",  lookup:occurrences_type},
+  { field: "registered_at", title: "Registered At",  type: "datetime"},
+  { field: "local", title: "Local", type: "string" },
+  { field: "km", title: "KM", type: "numeric"},
+  { field: "occurrence_type", title: "Ocurrence Type",  lookup:occurrences_type},
   ];
 
   

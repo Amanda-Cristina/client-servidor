@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Perfil(props) {
 	const history = useHistory();
+	const { setIsLoading } = props;
 
 	
 	const initialFormData = Object.freeze({
@@ -131,7 +132,7 @@ export default function Perfil(props) {
 		});
 	};
 
-	const handleSubmit = (e) => {
+	const handleUpdate = (e) => {
 		e.preventDefault();
 		console.log(formData);
 		if (validateForm()){
@@ -167,6 +168,42 @@ export default function Perfil(props) {
 					console.log(error.config);
 				});
 		}
+	};
+
+	const handleDelete = (e) => {
+		e.preventDefault();
+		
+		const id = localStorage.getItem('id');
+		axiosInstance
+			.delete(`/users/${id}`)
+			.then((res) => {
+				localStorage.removeItem('token');
+				localStorage.removeItem('name');
+				localStorage.removeItem('email');
+				localStorage.removeItem('id');
+				axiosInstance.defaults.headers['Authorization'] = null;
+				setIsLoading(false);
+				history.push('/');	
+			}).catch((error) => {
+				if (error.response) {
+					// The request was made and the server responded with a status code
+					// that falls out of the range of 2xx
+					console.log(error.response.data);
+					console.log(error.response.status);
+					console.log(error.response.headers);
+					setError(error.response.data.message); // set the error message state
+				} else if (error.request) {
+					// The request was made but no response was received
+					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+					// http.ClientRequest in node.js
+					console.log(error.request);
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					console.log('Error', error.message);
+				}
+				console.log(error.config);
+			});
+		
 	};
 
 	const classes = useStyles();
@@ -233,9 +270,19 @@ export default function Perfil(props) {
 						variant="contained"
 						color="primary"
 						className={classes.submit}
-						onClick={handleSubmit}
+						onClick={handleUpdate}
 					>
 						Update
+					</Button>
+					<Button
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className={classes.submit}
+						onClick={handleDelete}
+					>
+						Delete
 					</Button>
 					<Dialog open={error} onClose={handleErrorClose}>
 						<DialogContent>

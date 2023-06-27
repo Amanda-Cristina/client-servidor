@@ -30,6 +30,7 @@ const UserPosts = (props) => {
   
  
  const columns = [
+    { field: "id", title: "User",hidden: true},
     { field: "registered_at", title: "Registered At",  type: "datetime"},
     { field: "local", title: "Local", type: "string" },
     { field: "km", title: "KM", type: "numeric"},
@@ -59,8 +60,64 @@ const UserPosts = (props) => {
             occurrence_type: Number(newRow.occurrence_type),
             user_id: Number(localStorage.getItem('id'))
         }).then((res) => {
+            setTableData([...tableData, res.data]);
+        }).catch((error) => {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                setError(error.response.data.message);
+                setErrorDialogOpen(true);
+            } });
+       
+    } catch (error) {
+      console.log("deu ruim");
+      console.log(error);
+      setError(error.message);
+      setErrorDialogOpen(true);
+    }
+  };
+
+  const handleUpdate = async (newRow,oldRow) => {
+    try {
+        const updatedData = [...tableData]
+        updatedData[oldRow.tableData.id] = newRow
+        console.log(newRow);
+        axiosInstance
+        .put(`/occurrences/${Number(newRow.id)}`, {
+            registered_at: newRow.registered_at,
+            local: newRow.local,
+            km: Number(newRow.km),
+            occurrence_type: Number(newRow.occurrence_type),
+            user_id: Number(localStorage.getItem('id'))
+        }).then((res) => {
             console.log('deu boa')
-            setTableData([...tableData, newRow]);
+            setTableData(updatedData)
+        }).catch((error) => {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                setError(error.response.data.message);
+                setErrorDialogOpen(true);
+            } });
+       
+    } catch (error) {
+      console.log("deu ruim");
+      console.log(error);
+      setError(error.message);
+      setErrorDialogOpen(true);
+    }
+  };
+
+  const handleDelete = async (selectedRow) => {
+    try {
+             
+        axiosInstance
+        .delete(`/occurrences/${Number(selectedRow.id)}`)
+        .then((res) => {
+            console.log(res)
+            const updatedData = [...tableData]
+            updatedData.splice(selectedRow.tableData.id, 1)
+            setTableData(updatedData)
         }).catch((error) => {
             if (error.response) {
                 // The request was made and the server responded with a status code
@@ -90,7 +147,16 @@ const UserPosts = (props) => {
             onRowAdd: (newRow) => new Promise((resolve, reject) => {
                 handleAdd(newRow);
                 setTimeout(() => resolve(), 500)
-        })
+            }),
+            onRowUpdate: (newRow, oldRow) => new Promise((resolve, reject) => {
+              handleUpdate(newRow, oldRow);
+              setTimeout(() => resolve(), 500)
+            }),
+            onRowDelete: (selectedRow) => new Promise((resolve, reject) => {
+              handleDelete(selectedRow);
+              setTimeout(() => resolve(), 1000)
+  
+            })
         }}
         options={{
             sorting: true,addRowPosition: "first",actionsColumnIndex: -1}}/>

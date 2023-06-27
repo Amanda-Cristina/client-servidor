@@ -26,6 +26,7 @@ export default function Logout(props) {
 			localStorage.removeItem('token');
 			localStorage.removeItem('name');
 			localStorage.removeItem('email');
+			localStorage.removeItem('id');
 			axiosInstance.defaults.headers['Authorization'] = null;
 			setIsLoading(false);
 			history.push('/');		

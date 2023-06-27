@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axiosInstance from '../axios';
 import UserPosts from './userPosts';
 import PostLoadingComponent from './postLoading';
 import { baseURL } from '../globals';
@@ -34,9 +35,10 @@ export default function Perfil(props) {
 
 	useEffect(() => {
 		setAppState({ loading: true });
-		const apiUrl = baseURL+'occurrences';
-		fetch(apiUrl)
-			.then((data) => data.json())
+		const id = localStorage.getItem('id');
+		axiosInstance
+			.get(`occurrences/users/${id}`)
+			.then((data) => data.data)
 			.then((posts) => {
 				setAppState({ loading: false, posts: posts });
 			}).catch((error) => {
